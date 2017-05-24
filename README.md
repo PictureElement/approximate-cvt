@@ -11,7 +11,7 @@ A more suitable starting configuration is based on centroidal Voronoi
 tessellations(CVT), and ensures that the particle's initial positions are more
 evenly distributed throughout the search-space. 
 
-![fig cvt](material/fig.jpg)
+![voronoi voronoi](material/voronoi-diagram.jpg)
 
 The Voronoi diagram, shows a 10 point centroidal Voronoi tessellation. The 
 circles represent both the generating points of the Voronoi tesselation and the 
@@ -27,7 +27,19 @@ reasonable approximation will do.
 The algorithm computes the generator points for the CVT and was developed by 
 Ju, Du, and Gunzburger.
 
-![pseudocode img](material/pseudocode.png)
+![pseudocode pseudocode](material/pseudocode.png)
+
+## Execution
+
+**2 Dimensions**
+
+![terminal2D terminal2D](material/2-1.jpg)
+![graph2D graph2D](material/2-2.jpg)
+
+**3 Dimensions**
+
+![terminal3D terminal3D](material/3-1.jpg)
+![graph3D graph3D](material/3-2.jpg)
 
 ## More info
 
