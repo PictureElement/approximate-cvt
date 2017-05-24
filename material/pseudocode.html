@@ -1,0 +1,68 @@
+<p style="font-family: Courier">
+  <span style="color: blue">
+    /*<br>
+    &nbsp;*&nbsp;Inputs:<br>
+    &nbsp;*&nbsp;&nbsp;k, # of generators<br>
+    &nbsp;*&nbsp;&nbsp;q, # of sampling points<br>
+    &nbsp;*&nbsp;&nbsp;dim, dimensionality<br>
+    &nbsp;*&nbsp;&nbsp;maxEpochs, # of iterations<br>
+    &nbsp;*&nbsp;&nbsp;lo, up, search-space boundaries<br>
+    &nbsp;*&nbsp;&nbsp;a<sub>2</sub> > 0, b<sub>2</sub> > 0, a<sub>1</sub> + a<sub>2</sub> = 1, and b<sub>1</sub> + b<sub>2</sub> = 1<br>
+    &nbsp;*<br>
+    &nbsp;*&nbsp;Output:<br>
+    &nbsp;*&nbsp;&nbsp;z, generator points for the approximate CVT<br>
+    &nbsp;*/<br>
+    <br>
+  </span>
+  JDG(k, q, maxEpochs, lo, up, a<sub>1</sub>, a<sub>2</sub>, b<sub>1</sub>, b<sub>2</sub>) {<br>
+  <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">// Choose an initial set of k generator points using a Monte Carlo method</span><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;for i &larr; 0 to k - 1 {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z<sub>i</sub> &larr; rand(lo, up)<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j<sub>i</sub> &larr; 1<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+  <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;minDist &larr; &infin;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;dist &larr; 0<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;g &larr; 0<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;epoch &larr; 0<br>
+  <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;do {<br>
+  <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">// Generate q random sampling points using a Monte Carlo method</span><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for i &larr; 0 to q - 1 {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y<sub>i</sub> &larr; rand(lo, up)<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">// Find the generator that is closest to the sampling point</span><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for j &larr; 0 to k - 1 {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist &larr; squareDist(y<sub>i</sub>, z<sub>j</sub>)<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if dist &lt; minDist {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minDist &larr; dist<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;g &larr; j<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">// The set W<sub>i</sub>, includes all sampling points closest to z<sub>i</sub></span><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;W<sub>g</sub> &larr; y<sub>i</sub><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minDist &larr; &infin;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+  <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">// Compute centroids and update generators</span><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for i &larr; 0 to k - 1 {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if W<sub>i</sub>=&empty;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">// Compute the centroid</span><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;u<sub>i</sub> &larr; centroid(W<sub>i</sub>)<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">// Update generator</span><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z<sub>i</sub> &larr; (a<sub>1</sub> * j<sub>i</sub> + b<sub>1</sub>) * z<sub>i</sub> + (a<sub>2</sub> * j<sub>i</sub> + b<sub>2</sub>) * u<sub>i</sub> / (j<sub>i</sub> + 1)<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j<sub>i</sub> ++<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+  <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;epoch ++<br>
+  <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;} while epoch &lt; maxEpochs<br>
+  <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;return z<br>
+  <br>
+  }
+</p>
