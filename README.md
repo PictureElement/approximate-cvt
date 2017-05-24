@@ -31,14 +31,16 @@ Ju, Du, and Gunzburger.
 
 ## Execution
 
-**2 Dimensions**
+**2 Dimensions:**
 
 ![terminal2D terminal2D](material/2-1.png)
+
 ![graph2D graph2D](material/2-2.png)
 
-**3 Dimensions**
+**3 Dimensions:**
 
 ![terminal3D terminal3D](material/3-1.png)
+
 ![graph3D graph3D](material/3-2.png)
 
 ## More info
