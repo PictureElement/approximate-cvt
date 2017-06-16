@@ -37,8 +37,6 @@ typedef vector<Row> Matrix;
 
 int main(){
 
-	// Feasible region(boundaries)
-	Matrix bounds;
 	// # of generators
 	int k;
 	// # of sample points
@@ -65,15 +63,10 @@ int main(){
 	cin >> epochs;
 	cout << "a1 a2 b1 b2 (where: a2>0, b2>0, a1+a2=1, b1+b2=1): ";
 	cin >> a1 >> a2 >> b1 >> b2;
-	bounds.resize(dim);
-	for(int i=0; i<dim; i++){
-		cout << "Dimension#" << i+1 << "/lo: ";
-		cin >> lo;
-		bounds[i].push_back(lo);
-		cout << "Dimension#" << i+1 << "/up: ";
-		cin >> up;
-   	bounds[i].push_back(up);
-	}
+	cout << "Lower boundary: ";
+	cin >> lo;
+	cout << "Upper boundary: ";
+	cin >> up;
 
 	/*
 	 * Inputs:
@@ -81,13 +74,13 @@ int main(){
 	 *	 q: # of sampling points
 	 *   dim: dimensionality
 	 *   epochs: # of iterations
-	 *   bounds: search-space boundaries
+	 *   lo, up: search-space boundaries
 	 *   a1, a2, b1, b2: parameters, where: a2>0, b2>0, a1+a2=1, b1+b2=1
 	 *
 	 * Output:
 	 *   z generator points for the approximate CVT
 	 */
-	vector<point> z = CVT(k, q, dim, epochs, bounds, a1, a2, b1, b2);
+	vector<point> z = CVT(k, q, dim, epochs, lo, up, a1, a2, b1, b2);
 
 	// Print generator points 
 	cout<<"\nGenerator points:\n\n";
